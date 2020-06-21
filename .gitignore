@@ -1,0 +1,11 @@
+*.pyc
+__pycache
+.DS_Store
+.env.dev
+.env.prod
+.env.prod.db
+
+.env.staging
+.env.staging.db
+.env.prod.proxy-companion
+.env.staging.proxy-companion

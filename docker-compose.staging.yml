@@ -1,0 +1,58 @@
+version: '3.7'
+
+services:
+  web:
+    build:
+      context: ./app
+      dockerfile: Dockerfile.prod
+    command: gunicorn hello_django.wsgi:application --bind 0.0.0.0:8000
+    volumes:
+      - static_volume:/home/app/web/staticfiles
+      - media_volume:/home/app/web/mediafiles
+    expose:
+      - 8000
+    env_file:
+      - .env.staging
+    depends_on:
+      - db
+  db:
+    image: postgres:12.0-alpine
+    volumes:
+      - postgres_data:/var/lib/postgresql/data/
+    env_file:
+      - .env.staging.db
+  nginx-proxy:
+    container_name: nginx-proxy
+    build: nginx
+    restart: always
+    ports:
+      - 443:443
+      - 80:80
+    volumes:
+      - static_volume:/home/app/web/staticfiles
+      - media_volume:/home/app/web/mediafiles
+      - certs:/etc/nginx/certs
+      - html:/usr/share/nginx/html
+      - vhost:/etc/nginx/vhost.d
+      - /var/run/docker.sock:/tmp/docker.sock:ro
+    depends_on:
+      - web
+  nginx-proxy-letsencrypt:
+    image: jrcs/letsencrypt-nginx-proxy-companion
+    env_file:
+      - .env.staging.proxy-companion
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - certs:/etc/nginx/certs
+      - html:/usr/share/nginx/html
+      - vhost:/etc/nginx/vhost.d
+    depends_on:
+      - nginx-proxy
+
+volumes:
+  postgres_data:
+  static_volume:
+  media_volume:
+  certs:
+  html:
+  vhost:
