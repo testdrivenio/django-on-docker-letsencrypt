@@ -2,7 +2,7 @@
 
 ## Want to learn how to build this?
 
-Check out the [post](https://testdriven.io/django-lets-encrypt/).
+Check out the [post](https://testdriven.io/blog/django-lets-encrypt/).
 
 ## Want to use this project?
 
