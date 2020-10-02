@@ -27,3 +27,15 @@ Check out the [post](https://testdriven.io/blog/django-lets-encrypt/).
     ```
 
     Test it out.
+
+## Troubleshooting
+### Having trouble installing git & docker on your EC2 instance?
+Depending on your location, some EC2 instances (in the free tier) might not have `apt` or `apt-get` to install git or docker. These instances use `yum` instead. Perform the following to download, add a non-root-user and start docker.
+```bash
+sudo yum update -y
+sudo yum install git
+sudo yum install docker
+sudo usermod -a -G docker ec2-user
+sudo service docker start
+docker info
+```
