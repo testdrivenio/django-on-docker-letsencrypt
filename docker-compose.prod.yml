@@ -1,4 +1,4 @@
-version: '3.7'
+version: '3.8'
 
 services:
   web:
@@ -12,15 +12,15 @@ services:
     expose:
       - 8000
     env_file:
-      - .env.prod
+      - ./.env.prod
     depends_on:
       - db
   db:
-    image: postgres:12.0-alpine
+    image: postgres:13.0-alpine
     volumes:
       - postgres_data:/var/lib/postgresql/data/
     env_file:
-      - .env.prod.db
+      - ./.env.prod.db
   nginx-proxy:
     container_name: nginx-proxy
     build: nginx
@@ -40,12 +40,13 @@ services:
   nginx-proxy-letsencrypt:
     image: jrcs/letsencrypt-nginx-proxy-companion
     env_file:
-      - .env.prod.proxy-companion
+      - ./.env.prod.proxy-companion
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock:ro
       - certs:/etc/nginx/certs
       - html:/usr/share/nginx/html
       - vhost:/etc/nginx/vhost.d
+      - acme:/etc/acme.sh
     depends_on:
       - nginx-proxy
 
@@ -56,3 +57,4 @@ volumes:
   certs:
   html:
   vhost:
+  acme:
