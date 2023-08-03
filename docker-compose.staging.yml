@@ -37,8 +37,8 @@ services:
       - /var/run/docker.sock:/tmp/docker.sock:ro
     depends_on:
       - web
-  nginx-proxy-letsencrypt:
-    image: jrcs/letsencrypt-nginx-proxy-companion
+  acme-companion:
+    image: nginxproxy/acme-companion
     env_file:
       - ./.env.staging.proxy-companion
     volumes:
